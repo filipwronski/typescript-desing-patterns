@@ -1,25 +1,56 @@
-import { Client, DroidType, B1, Rx24 } from "../abstractFactory";
+import {
+    VictorianFurnitureFactory,
+    ModernFurnitureFactory,
+    VictorianChair,
+    VictorianTable,
+    ModernTable,
+    ModernChair,
+} from "../abstractFactory";
+
 
 describe('AbstractFactory', () => {
-    it('should create B1 droid type', () => {
-        const client = new Client();
-        expect(client.droidProducer(DroidType.Battle)).toBeInstanceOf(B1)
+    interface FurnitureOrder {
+        style: FurnitureStyle;
+    }
+    enum FurnitureStyle {
+        victorian = 'victorian',
+        modern = 'modern',
+    }
+    const prepareFurnitureOrder = (order: FurnitureOrder) => {
+        switch(order.style) {
+            case FurnitureStyle.victorian:
+                return {
+                    chair: new VictorianFurnitureFactory().createChair(),
+                    table: new VictorianFurnitureFactory().createTable(),
+                }
+            case FurnitureStyle.modern:
+                return {
+                    chair: new ModernFurnitureFactory().createChair(),
+                    table: new ModernFurnitureFactory().createTable(),
+                }
+        }
+    }
+
+    it('should return victorian furnitures for order', () => {
+        const furnitureOrder: FurnitureOrder = {
+            style: FurnitureStyle.victorian,
+        }
+
+        expect(prepareFurnitureOrder(furnitureOrder)).toStrictEqual({
+            chair: new VictorianChair(),
+            table: new VictorianTable(),
+        })
     })
 
-    it('should create Rx24 droid type', () => {
-        const client = new Client();
-        expect(client.droidProducer(DroidType.Pilot)).toBeInstanceOf(Rx24)
+    it('should return modern furnitures for order', () => {
+        const furnitureOrder: FurnitureOrder = {
+            style: FurnitureStyle.modern,
+        }
+
+        expect(prepareFurnitureOrder(furnitureOrder)).toStrictEqual({
+            chair: new ModernChair(),
+            table: new ModernTable(),
+        })
     })
 
-    it('should return correct info message', () => {
-        const client = new Client();
-        const droid = client.droidProducer(DroidType.Battle)
-        expect(droid.info()).toBe('B1, Battle Droid');
-    })
-
-    it('should return correct info message', () => {
-        const client = new Client();
-        const droid = client.droidProducer(DroidType.Pilot)
-        expect(droid.info()).toBe('Rx24, Pilot Droid');
-    })
 })

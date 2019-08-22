@@ -1,48 +1,62 @@
-export enum DroidType {
-    Battle = 'battle',
-    Pilot = 'pilot'
-}
-
-interface Droid {
+interface Furniture {
     info(): string;
+    color(): string;
 }
 
-interface DroidFactory {
-    create(): Droid; 
+interface FurnitureFactory {
+    createChair(): Furniture; 
 }
-export class Client {
-    droidProducer(kind: DroidType) {
-        switch(kind) {
-            case DroidType.Battle:
-                return new BattleDroidFactory().create();
-            case DroidType.Pilot:
-                return new PilotDroidFactory().create();
-            default:
-                throw new Error('Wrong droid type');
-        }
+ 
+export class VictorianFurnitureFactory implements FurnitureFactory {
+    createChair() {
+       return new VictorianChair(); 
+    }
+    createTable() {
+        return new VictorianTable();
     }
 }
   
-class BattleDroidFactory implements DroidFactory {
-    create() {
-       return new B1(); 
+export class ModernFurnitureFactory implements FurnitureFactory{
+    createChair() {
+        return new ModernChair();
+    }
+    createTable() {
+        return new ModernTable();
     }
 }
   
-class PilotDroidFactory implements DroidFactory{
-    create() {
-        return new Rx24();
-    }
-}
-  
-export class B1 implements Droid {
+export class ModernChair implements Furniture {
     info() {
-        return "B1, Battle Droid";
+        return "Amazing modern chair";
+    }
+    color() {
+        return "brown";
     }
 }
 
-export class Rx24 implements Droid {
+export class VictorianChair implements Furniture {
     info() {
-        return "Rx24, Pilot Droid";
+        return "Dignified victorian chair";
+    }
+    color() {
+        return "brown";
+    }
+}
+
+export class ModernTable implements Furniture {
+    info() {
+        return "Amazing modern tabler";
+    }
+    color() {
+        return "brown";
+    }
+}
+
+export class VictorianTable implements Furniture {
+    info() {
+        return "Dignified victorian table";
+    }
+    color() {
+        return "brown";
     }
 }
