@@ -4,7 +4,8 @@ interface Furniture {
 }
 
 interface FurnitureFactory {
-    createChair(): Furniture; 
+    createChair(): Furniture;
+    createTable(): Furniture;
 }
  
 export class VictorianFurnitureFactory implements FurnitureFactory {
