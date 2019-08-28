@@ -1,82 +1,113 @@
-interface Builder {
-    producePartA(): void;
-    producePartB(): void;
-    producePartC(): void;
-}
-
-class ConcreteBuilder1 implements Builder {
-    private product: Product1;
+class WoodenHouseBuilder {
+    private house: WoodenHouse;
 
     constructor() {
         this.reset();
     }
 
     public reset(): void {
-        this.product = new Product1();
+        this.house = new WoodenHouse();
     }
 
-    public producePartA(): void {
-        this.product.parts.push('PartA1');
+    public addBasement(): WoodenHouseBuilder {
+        this.house.setBasement('wooden basement');
+        
+        return this;
     }
 
-    public producePartB(): void {
-        this.product.parts.push('PartB1');
+    public addFirstFloor(): WoodenHouseBuilder {
+        this.house.setFirstFloor('wooden first floor');
+
+        return this;
     }
 
-    public producePartC(): void {
-        this.product.parts.push('PartC1');
+    public addGarage(): WoodenHouseBuilder {
+        this.house.setGarage('wooden garage');
+
+        return this;
     }
 
-    public getProduct(): Product1 {
-        const result = this.product;
+    public addSecondFloor(): WoodenHouseBuilder {
+        this.house.setSecondFloor('wooden second floor');
+
+        return this;
+    }
+
+    public build(): WoodenHouse {
+        const result = this.house;
         this.reset();
         return result;
     }
 }
 
-class Product1 {
-    public parts: string[] = [];
+interface House {
+    setBasement(basement: string): void;
+    setFirstFloor(firstFloor: string): void;
+    setGarage(garage: string): void;
+    setSecondFloor(secondFloor: string): void;
+}
+class WoodenHouse implements House {
+    private basement: string;
+    private firstFloor: string;
+    private secondFloor: string;
+    private garage: string;
 
-    public listParts(): void {
-        console.log(`Product parts: ${this.parts.join(', ')}\n`);
+    public setBasement(basemenet: string) {
+        this.basement = basemenet;
+    }
+
+    public setFirstFloor(firstFloor: string) {
+        this.firstFloor = firstFloor;
+    }
+
+    public setSecondFloor(secondFloor: string) {
+        this.secondFloor = secondFloor;
+    }
+
+    public setGarage(garage: string) {
+        this.garage = garage;
     }
 }
 
 class Director {
-    private builder: Builder;
+    private builder: WoodenHouseBuilder;
 
-    public setBuilder(builder: Builder): void {
+    public setBuilder(builder: WoodenHouseBuilder): void {
         this.builder = builder;
     }
 
-    public buildMinimalViableProduct(): void {
-        this.builder.producePartA();
+    public buildSmallHouseWithGarage(): void {
+        this.builder
+        .addFirstFloor()
+        .addGarage();
     }
 
-    public buildFullFeaturedProduct(): void {
-        this.builder.producePartA();
-        this.builder.producePartB();
-        this.builder.producePartC();
+    public buildBigHouseWithGarageAndBasemenet(): void {
+        this.builder
+        .addFirstFloor()
+        .addSecondFloor()
+        .addGarage()
+        .addBasement();
     }
 }
 
 function clientCode(director: Director) {
-    const builder = new ConcreteBuilder1();
+    const builder = new WoodenHouseBuilder();
     director.setBuilder(builder);
 
-    console.log('Standard basic product:');
-    director.buildMinimalViableProduct();
-    builder.getProduct().listParts();
+    console.log('Small House');
+    director.buildSmallHouseWithGarage();
+    builder.build();
 
     console.log('Standard full featured product:');
-    director.buildFullFeaturedProduct();
-    builder.getProduct().listParts();
+    director.buildBigHouseWithGarageAndBasemenet();
+    builder.build();
 
-    // Remember, the Builder pattern can be used without a Director class.
+    // the Builder pattern can be used without a Director class.
     console.log('Custom product:');
-    builder.producePartA();
-    builder.producePartC();
-    builder.getProduct().listParts();
+    builder.addFirstFloor()
+    .addBasement()
+    .build();
 }
 
 const director = new Director();
