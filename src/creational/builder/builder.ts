@@ -1,4 +1,4 @@
-class WoodenHouseBuilder {
+export class WoodenHouseBuilder {
     private house: WoodenHouse;
 
     constructor() {
@@ -40,13 +40,13 @@ class WoodenHouseBuilder {
     }
 }
 
-interface House {
+export interface House {
     setBasement(basement: string): void;
     setFirstFloor(firstFloor: string): void;
     setGarage(garage: string): void;
     setSecondFloor(secondFloor: string): void;
 }
-class WoodenHouse implements House {
+export class WoodenHouse implements House {
     private basement: string;
     private firstFloor: string;
     private secondFloor: string;
@@ -67,9 +67,18 @@ class WoodenHouse implements House {
     public setGarage(garage: string) {
         this.garage = garage;
     }
+
+    public getHouse() {
+        return {
+            basement: this.basement,
+            firstFloor: this.firstFloor,
+            secondFloor: this.secondFloor,
+            garage: this.garage,
+        }
+    }
 }
 
-class Director {
+export class Director {
     private builder: WoodenHouseBuilder;
 
     public setBuilder(builder: WoodenHouseBuilder): void {
@@ -90,25 +99,3 @@ class Director {
         .addBasement();
     }
 }
-
-function clientCode(director: Director) {
-    const builder = new WoodenHouseBuilder();
-    director.setBuilder(builder);
-
-    console.log('Small House');
-    director.buildSmallHouseWithGarage();
-    builder.build();
-
-    console.log('Standard full featured product:');
-    director.buildBigHouseWithGarageAndBasemenet();
-    builder.build();
-
-    // the Builder pattern can be used without a Director class.
-    console.log('Custom product:');
-    builder.addFirstFloor()
-    .addBasement()
-    .build();
-}
-
-const director = new Director();
-clientCode(director);
